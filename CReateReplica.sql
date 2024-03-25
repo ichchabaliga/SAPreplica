@@ -1,14 +1,25 @@
 
-
+DROP database IF EXISTS sapreplica;
 create database if not exists sapreplica;
 use sapreplica;
+CREATE TABLE if not exists BVOR (
+    IntercompanyNo VARCHAR(10) NOT NULL ,
+    CompanyCode VARCHAR(6) NOT NULL,
+    FiscalYear YEAR NOT NULL,
+    DocumentNo VARCHAR(10) NOT NULL,
+    PRIMARY KEY (IntercompanyNo, CompanyCode, DocumentNo, FiscalYear)
+
+);
+CREATE INDEX index_name ON BVOR(CompanyCode, DocumentNo, FiscalYear);
 
 
 CREATE TABLE if not exists BKPF (
     CompanyCode VARCHAR(6) NOT NULL,
     DocumentNo VARCHAR(10) NOT NULL,
     FiscalYear YEAR NOT NULL,
-    PRIMARY KEY (CompanyCode, DocumentNo, FiscalYear)
+    PRIMARY KEY (CompanyCode, DocumentNo, FiscalYear),
+    FOREIGN KEY (CompanyCode, DocumentNo, FiscalYear) REFERENCES BVOR(CompanyCode, DocumentNo, FiscalYear)
+
 );
 
 CREATE TABLE if not exists BSEG (
@@ -163,15 +174,6 @@ FOREIGN KEY (CompanyCode, DocumentNo, FiscalYear,LineItem) REFERENCES BSEG(Compa
 );
 
 
-CREATE TABLE if not exists BVOR (
-    IntercompanyNo VARCHAR(10) NOT NULL,
-    CompanyCode VARCHAR(6) NOT NULL,
-    FiscalYear YEAR(4) NOT NULL,
-    DocumentNo VARCHAR(10) NOT NULL,
-    PRIMARY KEY (IntercompanyNo, CompanyCode, FiscalYear, DocumentNo),
-FOREIGN KEY (CompanyCode, DocumentNo, FiscalYear) REFERENCES BKPF(CompanyCode, DocumentNo, FiscalYear)
-
-);
 
 
 CREATE TABLE if not exists LFC1 (
